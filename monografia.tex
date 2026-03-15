@@ -1,0 +1,596 @@
+% =============================================================================
+% Monografia: Produtividade Total dos Fatores e Despesas Públicas dos
+% Estados Brasileiros: Uma Aplicação de Dados em Painel
+% Autor: Yago Ramalho Silva – UFES, 2023
+%
+% Compilar com: pdflatex -> bibtex -> pdflatex -> pdflatex
+% (ou: latexmk -pdf monografia.tex)
+%
+% Pacotes necessários (todos disponíveis no TeX Live / MiKTeX):
+%   abntex2, inputenc, fontenc, babel, geometry, setspace,
+%   booktabs, longtable, graphicx, amsmath, amssymb,
+%   hyperref, microtype, csquotes, natbib
+% =============================================================================
+
+\documentclass[
+  12pt,
+  a4paper,
+  oneside,
+  brazil,
+  chapter=TITLE,
+  section=TITLE
+]{abntex2}
+
+% ---------- Encoding & language ---------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+
+% ---------- Font (Times-compatible) -----------------------------------------
+\usepackage{mathptmx}   % Times New Roman for text and math
+
+% ---------- Geometry (ABNT: 3cm top/left, 2cm right/bottom) ----------------
+\usepackage[
+  top=3cm, bottom=2cm,
+  left=3cm, right=2cm
+]{geometry}
+
+% ---------- Spacing ----------------------------------------------------------
+\usepackage{setspace}
+\onehalfspacing          % ABNT requires 1.5 line spacing for body text
+
+% ---------- Math -------------------------------------------------------------
+\usepackage{amsmath, amssymb}
+
+% ---------- Tables -----------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+
+% ---------- Figures ----------------------------------------------------------
+\usepackage{graphicx}
+\usepackage{float}
+\graphicspath{{figures/}}  % place figures in a figures/ subfolder
+
+% ---------- Captions ---------------------------------------------------------
+\usepackage{caption}
+\captionsetup{font=small, labelfont=bf, justification=centering}
+
+% ---------- Bibliography (ABNT style) ----------------------------------------
+\usepackage[alf, abnt-emphasize=bf]{abntex2cite}
+
+% ---------- Hyperlinks -------------------------------------------------------
+\usepackage[
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue
+]{hyperref}
+
+% ---------- Miscellaneous ----------------------------------------------------
+\usepackage{microtype}
+\usepackage{csquotes}
+\usepackage{indentfirst}
+\setlength{\parindent}{1.25cm}   % ABNT paragraph indent
+
+% =============================================================================
+% METADATA
+% =============================================================================
+\titulo{Produtividade Total dos Fatores e Despesas Públicas dos Estados Brasileiros: Uma Aplicação de Dados em Painel}
+\autor{Yago Ramalho Silva}
+\local{Vitória}
+\data{2023}
+\orientador{Prof. Dr. Edson Zambon Monte}
+\instituicao{Universidade Federal do Espírito Santo}
+\tipotrabalho{Monografia de Graduação}
+\preambulo{Monografia de Graduação apresentada ao curso de Ciências Econômicas do Centro de Ciências Jurídicas e Econômicas da Universidade Federal do Espírito Santo como requisito parcial para a obtenção do título de Bacharel em Ciências Econômicas.}
+
+% =============================================================================
+\begin{document}
+% =============================================================================
+
+\frenchspacing
+
+% ---------- Cover page -------------------------------------------------------
+\imprimircapa
+
+% ---------- Title page -------------------------------------------------------
+\imprimirfolhaderosto
+
+% ---------- Approval sheet ---------------------------------------------------
+\begin{folhadeaprovacao}
+  \begin{center}
+    {\ABNTEXchapterfont\large\imprimirautor}
+    \vspace*{\fill}\vspace*{\fill}
+    \begin{center}
+      \ABNTEXchapterfont\bfseries\Large\imprimirtitulo
+    \end{center}
+    \vspace*{\fill}
+    \hspace{.45\textwidth}
+    \begin{minipage}{.5\textwidth}
+      \imprimirpreambulo
+    \end{minipage}
+    \vspace*{\fill}
+  \end{center}
+  Aprovada em \underline{\hspace{1cm}}/\underline{\hspace{1cm}}/\underline{\hspace{1.5cm}}
+  \vspace*{\fill}
+  \begin{center}
+    \textbf{COMISSÃO EXAMINADORA}\\[1.5cm]
+    \rule{8cm}{0.4pt}\\
+    Prof. Dr. Edson Zambon Monte\\
+    Universidade Federal do Espírito Santo\\
+    Orientador\\[1.5cm]
+    \rule{8cm}{0.4pt}\\
+    Prof. Dr. Ricardo Ramalhete Moreira\\
+    Universidade Federal do Espírito Santo\\[1.5cm]
+    \rule{8cm}{0.4pt}\\
+    Prof. Dr. Guilherme Armando de Almeida Pereira\\
+    Universidade Federal do Espírito Santo
+  \end{center}
+\end{folhadeaprovacao}
+
+% ---------- Dedication -------------------------------------------------------
+\begin{dedicatoria}
+  \vspace*{\fill}
+  \begin{flushright}
+    \itshape
+    À minha família: Giovani, Yuri e Irakitânia.\\
+    À minha avó, Dona Rosa.
+  \end{flushright}
+\end{dedicatoria}
+
+% ---------- Acknowledgements -------------------------------------------------
+\begin{agradecimentos}
+À minha família, que deu toda a estrutura, condições, caminhos e alternativas para que eu pudesse continuar trilhando este percurso com liberdade e satisfação.
+
+A Hellen Alves, pelo amor e apoio incondicionais, hoje e sempre.
+
+A Isabelle Villend, que ao compartilhar dos mesmos anseios, sonhos e angústias, me deu confiança e contentamento.
+
+Aos meus amigos de velha data, cujo apoio é mútuo: Carlos Eduardo Sandes, Isabela Reisen, Leonardo Rezeda, Diego Netto, Paulo Henrique Guerra, Janaina Bergami e Caio Cezar. A vida é mais simples quando compartilhamos do mesmo riso.
+
+Àqueles que estiveram ao meu lado nos últimos 5 anos, intensificando minha experiência acadêmica e tornando-a mais vívida: Matheus Fânzeres, Eduardo Ataide, Bernardo Giacomo, Thales Kevalam, Tiago Camilo e Isabelly Passos.
+
+Para aqueles que, mesmo distantes fisicamente, estiveram sempre presentes em palavras e conforto: Rodrigo Peres, Lenilson Rocha, Mia Braaten, André Santos e Guilherme Mendes.
+
+Para aqueles que me serviram de inspiração e exemplo: Wires Alves, Eloah Fassarella e Nathalia Zuccolotto. Se um dia acreditei que poderia ir muito além, foi porque vi em vocês o caminho.
+
+Ao meu orientador, Edson Zambon Monte, pela confiança e aconselhamento, como também pela disciplina e rigor que sempre admirei desde o começo do curso.
+
+A Robert Detoni, que me guiou em minha primeira experiência profissional.
+
+Aos docentes da economia, que apoiaram minhas divagações e sempre forneceram direção e tempo para ouvir minhas indagações, em especial Gustavo Moura Cavalcanti, Mariana Ferreira Fialho, Celso Bissoli Sessa, Daniel Pereira Sampaio e Vinícius Pereira.
+
+Ao PET-Economia, que acolheu esse neófito perdido e esclareceu muita coisa.
+
+À memória de Antônio Taboada, eterno.
+\end{agradecimentos}
+
+% ---------- Abstract (Portuguese) -------------------------------------------
+\begin{resumo}
+Este trabalho objetivou verificar as relações entre a produtividade total dos fatores (PTF) dos estados brasileiros e suas despesas públicas por funções, a saber: \textit{i)} despesa com a função judiciário; \textit{ii)} despesa com função legislativa; \textit{iii)} despesa com a função administração/planejamento; \textit{iv)} despesa com a função educação e cultura; \textit{v)} despesa com a função indústria, comércio e serviços; \textit{vi)} despesa com a função ciência e tecnologia; \textit{vii)} despesa com a função assistência social e previdência; e \textit{viii)} despesa com a função saúde. O estudo compreendeu o período de 2003 a 2018 (frequência anual), e utilizou a metodologia de dados em painel. Para a estimação das PTFs estaduais, foi utilizado o método de inventário perpétuo. Variáveis de controle foram adotadas para dar robustez aos resultados. Os principais resultados encontrados foram: \textit{i)} nenhuma despesa apresentou impacto negativo; \textit{ii)} as despesas com legislativo, educação, indústria, comércio e serviços, ciência e tecnologia, assistência social e previdência, e administração e planejamento apresentaram sinal positivo, porém insignificativo; \textit{iii)} as despesas com saúde e judiciário impactaram positivamente na PTF.
+
+\vspace{\onelineskip}
+\noindent\textbf{Palavras-chave:} Produtividade Total dos Fatores (PTF). Despesas Públicas. Dados em Painel. Estados brasileiros.
+\end{resumo}
+
+% ---------- Abstract (English) ----------------------------------------------
+\begin{resumo}[Abstract]
+\begin{otherlanguage*}{english}
+This work aims to verify the relationships between the total factor productivity (TFP) of the Brazilian states and their public expenditure by function, namely: \textit{i)} expenditure with the judiciary function; \textit{ii)} expenditure with legislative function; \textit{iii)} expenditure on administration/planning; \textit{iv)} expenditure on education and culture; \textit{v)} expenditure on industry, commerce and services; \textit{vi)} expenditure on science and technology; \textit{vii)} expenditure with the social assistance and social security function; and \textit{viii)} expenditure with health. The study covered the period from 2003 to 2018 (annual frequency), and used panel data methodology. For the estimation of the TFP for each state, the perpetual inventory method was used. Control variables were adopted to give robustness to the results. The main results found were: \textit{i)} no expenditure had a negative impact; \textit{ii)} expenditures related to the legislative, education, industry, commerce and services, science and technology, social assistance/welfare and administration/planning showed a positive, albeit insignificant, sign; \textit{iii)} health and judiciary expenditures positively influenced the TFP.
+
+\vspace{\onelineskip}
+\noindent\textbf{Keywords:} Total Factor Productivity (TFP). Public Expenditure. Panel Data. Brazilian States.
+\end{otherlanguage*}
+\end{resumo}
+
+% ---------- Lists of figures and tables -------------------------------------
+\listoffigures*
+\cleardoublepage
+\listoftables*
+\cleardoublepage
+
+% ---------- Abbreviations ----------------------------------------------------
+\begin{siglas}
+  \item[DESPADM]   Despesa por função: Administração
+  \item[DESPASS]   Despesa por função: Assistência e Previdência
+  \item[DESPEDUC]  Despesa por função: Educação e Cultura
+  \item[DESPICS]   Despesa por função: Indústria, Comércio e Serviços
+  \item[DESPJUD]   Despesa por função: Judiciário
+  \item[DESPLEG]   Despesa por função: Legislativo
+  \item[DESPSAUDE] Despesa por função: Saúde e Saneamento
+  \item[DESPTEC]   Despesa por função: Ciência e Tecnologia
+  \item[FBKFSP]    Formação Bruta de Capital Físico do Setor Público
+  \item[FGV-IBRE]  Fundação Getúlio Vargas -- Instituto Brasileiro de Economia
+  \item[IBGE]      Instituto Brasileiro de Geografia e Estatística
+  \item[IPEA]      Instituto de Pesquisa Econômica Aplicada
+  \item[OECD]      Organization for Economic Co-operation and Development
+  \item[PTF]       Produtividade Total dos Fatores
+  \item[STN]       Secretaria do Tesouro Nacional
+\end{siglas}
+
+% ---------- Table of contents ------------------------------------------------
+\tableofcontents*
+\cleardoublepage
+
+% =============================================================================
+\textual
+% =============================================================================
+
+% -----------------------------------------------------------------------------
+\chapter{Introdução}
+% -----------------------------------------------------------------------------
+
+\section{Justificativa}
+
+O crescimento econômico é tema central para a compreensão de como a renda de determinado país cresce e, consequentemente, de como o bem-estar da sociedade como um todo aumenta, tornando difícil superestimar sua relevância no debate acadêmico \cite{jones2013}. Inevitavelmente, explicar a fonte da diferença de renda entre países tira a questão do exclusivismo acadêmico e a insere numa rede de interesses políticos, sociais e econômicos. Uma fonte primária para essa diferença ao qual os estudos sempre retornam é o tema da produtividade, que pode ser definida como ``a habilidade de se transformar insumos e recursos em produtos ou bens finais de forma mais eficiente'' \cite{tavares2001}.
+
+De maneira geral, os indicadores de produtividade medem a eficiência com que dada economia transforma insumos em produtos a partir da razão entre medidas de produção e medidas de insumos \cite{denegri2014}. Um dos principais indicadores de produtividade é a Produtividade Total dos Fatores (PTF), que considera tanto a produtividade do trabalho, quanto a eficiência do uso de capital, e é estimada a partir de funções de produção. A PTF capta aquilo que no crescimento econômico não é explicado pelos insumos produtivos, derivando daí seu outro nome: ``Resíduo de Solow''. Esse indicador tem recebido igual atenção e renovação em seu tratamento, graças à disponibilidade cada vez maior de dados e de melhorias metodológicas tanto na literatura empírica quanto teórica \cite{vanbeveren2012}.
+
+Segundo \citeonline{veloso2020}, em trabalho sobre o caso brasileiro, realizado pelo Observatório da Produtividade Regis Bonelli (FGV-IBRE), o crescimento da renda nacional se dará majoritariamente pela produtividade, ressaltando-se em particular que a única forma de gerar crescimento sustentado para as próximas décadas reside em reformas que levem à elevação da taxa de crescimento da PTF. A problemática da produtividade brasileira tornou-se mais acentuada conforme a desaceleração do crescimento econômico brasileiro foi se apresentando no período pós-crise de 2008 (crise do Subprime), e as dificuldades de se sustentar taxas de investimento e de ocupação no longo prazo foram se estabelecendo.
+
+Nesse ponto, convém uma breve digressão acerca da história do crescimento econômico recente do país e onde o mesmo se insere internacionalmente em termos de produtividade. Desde o início do século XXI, o Brasil teve seu crescimento propulsionado por uma série de condições favoráveis. Destaca-se, dentre os fatores que contribuíram para tal crescimento, que a expansão da demanda interna foi derivada, especialmente, pelo aumento de renda, pela incorporação de mais pessoas no mercado de trabalho e de consumo, e pela evolução favorável dos termos de troca; por sua vez, a demanda externa cresceu graças ao \textit{boom} das \textit{commodities}; a presença de um bônus demográfico, isto é, ter uma população economicamente ativa maior que a parcela inativa (idosos, crianças, entre outros), também contribuiu significativamente para o processo, entre tantos outros fenômenos que não são diretamente ligados à produtividade. No entanto, após a crise do \textit{subprime}, perde-se parte desse impulso, trazendo à tona a insuficiência desses indicadores para o crescimento da economia no longo prazo e, mais do que isso, da relevância da produtividade como uma condição necessária para tanto. De fato, mais relevante que constatar um declínio ou melhora nos indicadores de produtividade, é notar que em grande medida ela estagnou devido a fatores profundos e complexos, e não meramente conjunturais \cite{denegri2014}.
+
+À sua maneira, \citeonline{ellery2014} e \citeonline{mation2014} mostram como a taxa de crescimento da produtividade do Brasil é baixa em termos absolutos, mas, ainda mais explicitamente, em termos relativos, quando colocada lado a lado com o crescimento apresentado por outros países. Essa estagnação frente aos outros países se mantém independentemente da medida de produtividade utilizada, e até mesmo da desagregação por setores, mas é ainda mais destacada quando se usa a PTF.
+
+Segundo \citeonline{giambiagi2017}, a despeito dos dilemas apresentados pela produtividade brasileira, o crescimento econômico em si segue demandando a ampliação de fontes de energia, a integração de regiões etc., sinalizando a sempre presente necessidade de investimento de longo prazo e alto risco característico dos gastos do setor público. A fim de exemplificar a universalidade do problema, segundo a Organização para Cooperação e Desenvolvimento Econômico \cite{oecd2001}, as medidas de crescimento da produtividade constituem indicadores fundamentais para a análise do crescimento econômico. Essa ligação é essencial, uma vez que a produtividade nacional tem apresentado fraco desempenho, ao passo que as despesas públicas têm aumentado de forma expressiva e improdutiva.
+
+Conforme \citeonline{candido2001}, alguns fatores podem contribuir para a ocorrência de gastos públicos improdutivos, tais como: \textit{i)} falta de preparo técnico do pessoal; \textit{ii)} incertezas; \textit{iii)} deficiências do processo orçamentário (técnico-operacional e político); \textit{iv)} corrupção; \textit{v)} paralisação de obras; entre outros. A baixa qualidade das instituições (como a excessiva burocracia, a estrutura tributária etc.) também geram ineficiências \cite{mation2014}. A literatura acerca dos impactos do gasto público na PTF, no entanto, é limitada e sem consensos, especialmente considerando a inexistência de estudos que verifiquem esse impacto a nível estadual e desagregado por funções, como as despesas com o judiciário, o legislativo, entre outras.
+
+Acerca das Unidades Federativas, \citeonline{silva2021}, em estudo sobre determinantes da produtividade estadual, destaca que o crescimento da produtividade no período de 2010 a 2018 foi ínfimo. Alguns poucos estados se sobressaem na eficiência, sendo eles: Mato Grosso, Mato Grosso do Sul, Piauí e Maranhão, tendo em comum a maior importância da produção agropecuária para a economia local. Em termos regionais, é a região Nordeste que apresentou melhor desempenho no período, ao passo que a região Sudeste apresentou o pior, com crescimento quase inexistente, indicando um movimento semelhante ao que fora sugerido a nível nacional.
+
+Em trabalho parecido utilizando dados em painel para o período 2004--2014, \citeonline{souza2021} demonstra que há variação nas PTFs estaduais dentro de cada região, com exceção do Sul, onde o resultado é relativamente homogêneo. Além disso, constata-se estagnação no período, com queda nos últimos anos da série.
+
+Assim, considerando o arrefecimento observado dos indicadores de produtividade nas últimas décadas, insere-se nessa problemática a questão norteadora desta pesquisa: objetivou-se estimar as PTFs dos estados brasileiros, avaliando sua relação com as despesas públicas por função, a partir da metodologia de dados em painel, para o período anual de 2003 a 2018.
+
+Espera-se, com isso, contribuir com a literatura empírica de crescimento econômico no âmbito da economia brasileira em dois pontos principais: estabelecendo a relação do gasto público desagregado por funções, que até então fora comumente analisado a nível agregado, com a história recente dos indicadores de produtividade dos estados; e, além disso, apresentando empiricamente se há ou não um impacto desses gastos na produtividade total dos fatores, e se houver, qual a sua magnitude.
+
+\section{Hipótese}
+
+As despesas, em geral, não afetam a PTF dos estados brasileiros e, se afetam, os efeitos são muito pequenos.
+
+\section{Objetivos}
+
+\subsection{Objetivo Geral}
+
+Este trabalho teve como objetivo verificar as relações entre a produtividade total dos fatores (PTF) dos estados brasileiros e suas despesas públicas por funções, a saber: \textit{i)} despesa com a função judiciário; \textit{ii)} despesa com função legislativa; \textit{iii)} despesa com a função administração/planejamento; \textit{iv)} despesa com a função educação e cultura; \textit{v)} despesa com a função indústria, comércio e serviços; \textit{vi)} despesa com a função ciência e tecnologia; \textit{vii)} despesa com a função assistência social e previdência; e \textit{viii)} despesa com a função saúde.
+
+\subsection{Objetivos Específicos}
+
+De modo específico, pretendeu-se:
+
+\begin{enumerate}[label=\alph*)]
+  \item Estimar a Produtividade Total dos Fatores (PTF) para os estados brasileiros;
+  \item Verificar se variáveis de controle, tais como o grau de abertura comercial, a densidade demográfica e o acesso a água potável, afetam a produtividade total dos fatores dos estados brasileiros.
+\end{enumerate}
+
+\section{Estrutura do Trabalho}
+
+O presente trabalho está estruturado da seguinte forma: esta primeira seção, a introdução, apresentou brevemente a temática estudada, a justificativa para a realização da pesquisa, bem como sua hipótese e objetivos; a seção 2 faz uma revisão da literatura, abordando algumas das principais publicações na área de produtividade total dos fatores e seus respectivos determinantes, nacional e internacionalmente; a seção 3 trata da metodologia adotada na pesquisa, tanto para estimação da PTF quanto para especificação do modelo; a seção 4 exibe os resultados do estudo, acompanhados de suas discussões e análises; e, por último, a seção 5 expõe as conclusões do trabalho.
+
+% -----------------------------------------------------------------------------
+\chapter{Revisão da Literatura}
+% -----------------------------------------------------------------------------
+
+As grandes transformações advindas da revolução industrial motivaram questões basilares no interior da ciência econômica desde suas origens. Procurou-se compreender os processos que levaram as principais economias a passarem de suas bases agrárias para industriais, o aumento vertiginoso dos níveis de renda globalmente e, mais recente, o interesse recaiu cada vez mais em medidas de eficiência alocativa e diferenças nas taxas de crescimento entre países explicadas através do progresso tecnológico, logístico e operacional. Em particular, mais próximo do estado da arte, teóricos da teoria do crescimento conferem ênfase em capital humano, conhecimento e capital fixo, buscando mensurar qual parcela do crescimento econômico se deve a fatores tecnológicos e qual se deve à formação de capital \cite{hulten2001}.
+
+Na literatura empírica especializada, inexiste o que se poderia chamar de consenso quanto ao fator determinante no crescimento do produto. Historicamente, duas tradições foram sintetizadas e aprimoradas, especialmente a partir de \citeonline{solow1956}, e deram origem ao que atualmente se chama de produtividade total dos fatores e a contabilidade do crescimento: uma primeira referente às práticas do cômputo de contas nacionais dos Estados Unidos realizadas pelo NBER, e uma segunda referente ao trabalho de Paul Douglas e Charles Cobb com funções de produção, a famosa função Cobb-Douglas, que viria a ser ponto de partida para muitas elaborações posteriores \cite{griliches1996}.
+
+No fundo, a PTF não é um conceito teoricamente denso, e sim um elemento implícito da teoria do fluxo circular da renda. Evidentemente, o desenvolvimento deste arcabouço se deveu às contribuições de diversos autores (alguns trabalhos recentes de maior destaque são \citeonline{olley1996}, \citeonline{petrin2003} e \citeonline{wooldridge2009}, entre outros), que incrementalmente foram aperfeiçoando a métrica em termos de metodologia, definição e escopo.
+
+A novidade trazida pela abordagem de Solow consistiu em integrar a teoria econômica vigente com uma metodologia de computação que usa do instrumental de cálculo diferencial. Partindo de uma função de produção com retornos constantes de escala, Solow conseguiu deduzir consequências e restrições para índices de produtividade. A função $Q_t = A_t F(K_t, L_t)$ conta com um parâmetro de eficiência Hicks neutra, $A_t$, que mede a mudança na função de produção dados os níveis de capital e trabalho \cite{tavares2001}. Escrita dessa forma, uma abordagem não-paramétrica pode ser empregada, possibilitando reescrevê-la numa forma diferencial:
+
+\begin{equation}
+  \frac{\dot{Q}_t}{Q_t} = \frac{\partial Q}{\partial K}\frac{K_t}{Q_t}\frac{\dot{K}_t}{K_t} + \frac{\partial Q}{\partial L}\frac{L_t}{Q_t}\frac{\dot{L}_t}{L_t} + \frac{\dot{A}_t}{A_t},
+  \label{eq:solow_diff}
+\end{equation}
+
+\noindent onde $Q$, $K$, $L$ são, respectivamente, o produto, o capital e o trabalho, que aparecem na forma de taxas de crescimento.
+
+Essa expressão sinaliza que o crescimento do produto pode ser decomposto em taxas de crescimento de trabalho e capital (e suas respectivas elasticidades) somado à taxa de crescimento desse índice de eficiência Hicksiano. As elasticidades não são diretamente observáveis, porém, sobre a hipótese de que cada fator de produção é remunerado por sua respectiva produtividade marginal, os preços relativos $s^K$ e $s^L$ podem ser utilizados no lugar. Assim,
+
+\begin{equation}
+  RS = \frac{\dot{Q}_t}{Q_t} - s_t^K \frac{\dot{K}_t}{K_t} - s_t^L \frac{\dot{L}_t}{L_t} = \frac{\dot{A}_t}{A_t},
+  \label{eq:residuo_solow}
+\end{equation}
+
+\noindent em que $RS$ é o Resíduo de Solow, isto é, a taxa de crescimento residual do produto que não é explicado pelos insumos \cite{hulten2001}.
+
+Enquanto medida de produtividade, a PTF considera todos os fatores de produção e insumos relevantes para a compreensão da eficiência alocativa de recursos numa determinada região, sendo assim uma medida mais completa que a produtividade do trabalho.
+
+Segundo \citeonline{ellery2014}, há dificuldades relacionadas à especificação da função de produção, como também de ordem empírica na estimação da PTF. Cabe notar que algumas hipóteses precisam ser atendidas a fim de que a função de produção seja bem definida e forneça estimativas confiáveis: espera-se que as mudanças tecnológicas sejam neutras, que a remuneração dos fatores seja igual a suas respectivas produtividades marginais, além de que as funções de produção sejam homogêneas.
+
+Em particular, capital e trabalho apresentam suas próprias dificuldades de estimação, considerando que cada possibilidade pode subestimar ou sobrestimar a PTF. Geralmente, mensura-se a quantidade de trabalho com medidas como horas trabalhadas, número de trabalhadores, ou população ocupada em casos mais macroeconômicos. Já o estoque de capital comumente é calculado com metodologias específicas tendo em vista a inexistência de séries desse indicador: \citeonline{ferreira2010}, por exemplo, utiliza o método de inventário perpétuo; outra alternativa é o uso de \textit{proxies} como uso de energia elétrica industrial, estoque de capital residencial urbano, entre outras \cite{firme2014}. Convém salientar que, enquanto resíduo, a medida está sujeita a vieses envolvendo erro de medida, omissão de variáveis relevantes, viés de agregação e má especificação de modelo.
+
+De maneira mais geral, há uma extensa literatura científica que apresenta evidências sobre variáveis que podem impactar, positivamente ou não, na taxa de crescimento da PTF, tais como investimentos em infraestrutura \cite{mendes2009,benitez1999}, educação \cite{tavares2001}, aspectos geográficos \cite{gomes2008}, investimento público \cite{godoy2008}, entre outros. Em particular, quanto à participação do setor público, \citeonline{ellery2013} aponta que políticas e mudanças institucionais que aumentem a PTF podem levar a maior crescimento econômico se comparado a outras variáveis, como políticas que foquem no aumento da taxa de investimento.
+
+\citeonline{tavares2001} utilizaram dados em painel para 21 estados brasileiros no período de 1986--1998 a fim de estimar a relevância do estoque de capital humano na PTF estadual. Os autores encontraram evidências de que o aumento de 10\% na média dos anos de estudo da população ocupada resultaria num aumento de 10,5\% da PTF, colocando o capital humano como um fator muito determinante dos níveis de produtividade estaduais.
+
+\citeonline{gomes2008} objetivaram estimar, a partir dos métodos de mínimos quadrados de dois estágios (MQ2E) e método dos momentos generalizados (MMG), os determinantes da PTF na Amazônia Legal, no período de 1990 a 2004. Dentre os determinantes analisados, apenas os incentivos fiscais apresentaram impacto negativo na PTF, sinalizando que o incentivo ao capital não implica em elevação da produtividade.
+
+\citeonline{benitez1999} investigou a relação entre infraestrutura e a PTF regional, a partir da construção de dotações regionais de infraestrutura, concluindo que a infraestrutura, enquanto recurso, impacta tanto na produtividade quanto no produto. Já \citeonline{mendes2009} avaliaram o impacto de investimentos em infraestrutura na PTF da agricultura brasileira a partir do Método Generalizado de Momentos, no período 1985--2004, constatando que há uma relação positiva, com retornos podendo acontecer de 0 a 2 anos.
+
+Quanto à influência do setor público na PTF brasileira, \citeonline{godoy2008} analisa a relação de longo prazo entre as variáveis FBKFSP, PIB e PTF, para o período 1994--2007 (pós-Plano Real). Como resultado, o autor observou que o aumento de 1\% no investimento público poderia aumentar a PTF em até 0,29\%.
+
+Assim, a literatura aponta para uma série de possíveis determinantes da PTF, cada qual a partir de estudos que utilizam de metodologias e escopos distintos. Nesse contexto, o presente trabalho objetivou verificar a relação do gasto público desagregado por funções com a PTF dos estados e, além disso, estabelecer empiricamente se há ou não um impacto desses gastos na produtividade total dos fatores.
+
+% -----------------------------------------------------------------------------
+\chapter{Metodologia}
+% -----------------------------------------------------------------------------
+
+\section{Dados e Variáveis}
+
+O estudo utilizou dados em painel para os 26 estados brasileiros\footnote{O Distrito Federal não está incluso devido à falta de dados para algumas das variáveis utilizadas.}, no período que vai de 2003 a 2018. A escolha das variáveis de controle seguiu \citeonline{yu2022}. Foram incluídos determinantes diversos da PTF, tais como grau de abertura econômica, acesso a água potável, consumo de energia elétrica \textit{per capita}, densidade demográfica, educação e a proporção do valor adicionado da indústria no PIB. As variáveis selecionadas estão dispostas na Tabela~\ref{tab:variaveis}. Os dados foram coletados da base de dados SIDRA-IBGE, do IPEA data e da Comex Stat. As séries que estavam em unidades monetárias foram deflacionadas a preços constantes de 2018. As estimações foram realizadas por meio do R Project e do RStudio, utilizando especialmente o pacote \texttt{plm}.
+
+\begin{table}[H]
+  \centering
+  \caption{Variáveis, siglas e fonte}
+  \label{tab:variaveis}
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Variável} & \textbf{Sigla} & \textbf{Fonte} \\
+    \midrule
+    Produto Interno Bruto estadual & PIB & IBGE \\
+    Estoque de capital & $K$ & Elaboração própria (IBGE) \\
+    População ocupada & $L$ & IBGE \\
+    Densidade demográfica & POP & IBGE \\
+    Média de anos de estudo & EDUC & IBGE \\
+    Despesas públicas totais & DESPGOV & STN \\
+    Desp. com a função legislativa & DESPLEG & STN \\
+    Desp. com a função judiciário & DESPJUD & STN \\
+    Desp. com a função adm. e planejamento & DESPADM & STN \\
+    Desp. com a função educação e cultura & DESPEDUC & STN \\
+    Desp. com a função ind., comércio e serv. & DESPICS & STN \\
+    Desp. com a função ciência e tecnologia & DESPTEC & STN \\
+    Desp. com a função assist. social e prev. & DESPASS & STN \\
+    Desp. com a função saúde & DESPSAUDE & STN \\
+    Proporção com acesso a água potável & AGUA & IPEA \\
+    Abertura econômica & TRADE & COMEX \\
+    Consumo de energia elétrica \textit{per capita} & ENERG & IPEA \\
+    Valor adicionado da indústria sobre o PIB & VAK & IPEA \\
+    \bottomrule
+  \end{tabular}
+  \legend{Fonte: elaboração própria.}
+\end{table}
+
+\section{Estratégia para Estimação da Produtividade Total dos Fatores}
+
+A metodologia para cálculo da PTF segue o proposto por \citeonline{solow1956}. Considere a função Cobb-Douglas aumentada:
+
+\begin{equation}
+  Y_{it} = A_{it} K_{it}^{\alpha} L_{it}^{\beta}, \quad 0 < \alpha < 1,\; 0 < \beta < 1,
+  \label{eq:cobb_douglas}
+\end{equation}
+
+\noindent onde $Y$ (PIB estadual) é uma função do trabalho ($L$) e do capital físico ($K$), enquanto que $A$ é o parâmetro de interesse, a produtividade total dos fatores.
+
+A partir de especificações propostas por \citeonline{ferreira2010} e considerando o contexto desta pesquisa, indexando-a por $i = 1, 2, \ldots, 26$ estados e $t = 1, 2, \ldots, 16$ (os anos de 2003 a 2018), e tomando $k$ como estoque de capital físico por trabalhador construído pelo método do inventário perpétuo, $y$ como PIB por trabalhador, e $H$ como capital humano, tem-se:
+
+\begin{equation}
+  y_{it} = A_{it}\, k_{it}^{\alpha}\, H_{it}^{\beta}, \quad 0 < \alpha < 1,\; 0 < \beta < 1.
+  \label{eq:cd_perworker}
+\end{equation}
+
+Entende-se por ``trabalhador'' as unidades que compõem a população ocupada, calculada pelo IPEA. É comum que os valores das elasticidades sigam a hipótese de retornos constantes de escala, como a proposta por \citeonline{gollin2002}, de $\alpha = 0{,}4$ e $\beta = 0{,}6$, que foi seguida neste trabalho.
+
+O capital humano segue a forma minceriana \cite{ferreira2003,maia2013}, onde há apenas um tipo de trabalho na economia e este tem sua qualificação determinada pela educação. Assim, sendo $\varphi$ uma medida do aumento percentual da renda por ano adicional de qualificação:
+
+\begin{equation}
+  H_{it} = \exp\!\left(\varphi\, h_{it}\right),
+  \label{eq:human_capital}
+\end{equation}
+
+\noindent em que $\varphi = 0{,}1$ \cite{ferreira2010} e $h_{it}$ é a média dos anos de estudo da população com 25 anos ou mais de dado estado em determinado período.
+
+A série de capital, $K$, é obtida pelo método do inventário perpétuo. Seguindo \citeonline{ferreira2010}, primeiro é necessário obter uma série de investimentos, que consiste na multiplicação da participação média do investimento no produto do Brasil pelo PIB estadual. A partir disso, define-se $I_0$ como a média dos cinco primeiros anos da série a fim de minimizar possíveis flutuações econômicas na série. Dessa forma, é possível calcular:
+
+\begin{equation}
+  K_0 = \frac{I_0}{g + \delta},
+  \label{eq:K0}
+\end{equation}
+
+\noindent onde $g$ é a taxa de crescimento técnico (utiliza-se o crescimento do número de artigos técnico-científicos publicados como \textit{proxy}) e $\delta = 5{,}96\%$ denota a taxa de depreciação média do capital no período.
+
+Acerca da taxa de crescimento técnico, $g$, a definição realizada segue considerações presentes em \citeonline{elgin2015}, que concluiu que, entre os possíveis indicadores, número de artigos científicos é positiva e consistentemente correlacionado com os componentes de progresso técnico da PTF. Assim, dada a disponibilidade de dados, utilizou-se $g = 8{,}7\%$. O estoque de capital é, então, calculado recursivamente por:
+
+\begin{equation}
+  K_{t+1} = I_t + (1 - \delta)\,K_t.
+  \label{eq:perpetual_inventory}
+\end{equation}
+
+Por fim, tomando-se como base a Equação~\eqref{eq:cd_perworker}, a produtividade total dos fatores pode ser calculada a partir da seguinte expressão:
+
+\begin{equation}
+  A_{it} = \frac{y_{it}}{k_{it}^{\alpha}\, H_{it}^{\beta}}.
+  \label{eq:tfp}
+\end{equation}
+
+\section{Metodologia Econométrica}
+
+A estimação das regressões para verificar a relação entre a PTF e as despesas públicas foi realizada por meio da metodologia de dados em painel. A abordagem de dados em painel permite combinar dados de séries temporais com dados de corte transversal. Tomando-se como referência \citeonline{greene2008}, a estrutura geral para modelar dados em painel pode ser representada por:
+
+\begin{equation}
+  y_{it} = \mathbf{x}_{it}'\,\boldsymbol{\beta} + \mathbf{z}_i'\,\boldsymbol{\alpha} + \epsilon_{it}, \quad i = 1, \ldots, N,\; t = 1, \ldots, T,
+  \label{eq:panel_general}
+\end{equation}
+
+\noindent em que existem $K$ regressores em $\mathbf{x}_{it}$, não incluindo o termo constante. A heterogeneidade, ou o efeito individual, é dado por $\mathbf{z}_i'\boldsymbol{\alpha}$, onde $\mathbf{z}_i$ contém um termo constante e um conjunto de variáveis individuais ou específicas dos grupos, tomadas como constantes ao longo do tempo $t$. O principal objetivo é estimar de forma consistente e eficiente os efeitos parciais $\boldsymbol{\beta} = \partial E[y_{it}|\mathbf{x}_{it}]/\partial\mathbf{x}_{it}$.
+
+Se $\mathbf{z}_i$ é não observado, porém correlacionado com $\mathbf{x}_{it}$, então o estimador de MQO é viciado e inconsistente devido ao problema de variáveis omitidas. No entanto, o modelo de \textit{efeitos fixos}:
+
+\begin{equation}
+  y_{it} = \mathbf{x}_{it}'\,\boldsymbol{\beta} + \alpha_i + \epsilon_{it},
+  \label{eq:fixed_effects}
+\end{equation}
+
+\noindent onde $\alpha_i = \mathbf{z}_i'\boldsymbol{\alpha}$, incorpora todos os efeitos observados e especifica uma média condicional estimável, tratando $\alpha_i$ como parâmetro desconhecido a ser estimado.
+
+Assumindo-se que a heterogeneidade individual não observada seja não correlacionada com as variáveis incluídas, $\mathbf{x}_{it}$, então o modelo pode ser formulado como:
+
+\begin{equation}
+  y_{it} = \mathbf{x}_{it}'\,\boldsymbol{\beta} + \alpha + u_i + \epsilon_{it},
+  \label{eq:random_effects}
+\end{equation}
+
+\noindent i.e., como um modelo de regressão linear com um distúrbio composto. Tal abordagem é chamada de \textit{efeitos aleatórios}, onde agora o único termo constante é a média da heterogeneidade não observada, $\alpha = E[\mathbf{z}_i'\boldsymbol{\alpha}]$, e $u_i$ é a heterogeneidade aleatória específica para a $i$-ésima observação. Para o modelo de efeitos aleatórios o método mais adequado é o método de Mínimos Quadrados Generalizados (MQG).
+
+Cabe ressaltar que a metodologia de dados em painel permite controlar de forma correta a heterogeneidade dos estados individuais, além de gerar menor colinearidade, maior grau de liberdade e maior eficiência \cite{tavares2001}.
+
+% -----------------------------------------------------------------------------
+\chapter{Resultados e Discussões}
+% -----------------------------------------------------------------------------
+
+\section{Estatísticas Descritivas e Estimação da PTF}
+
+A Tabela~\ref{tab:descritiva} apresenta as estatísticas descritivas para as variáveis selecionadas, no período que vai de 2003 a 2018. Os valores monetários estão a preços constantes de 2018. Observa-se uma variação considerável entre os valores máximos e mínimos para cada variável, indicando heterogeneidade entre os dados. As colunas $T$ e $N$ são, respectivamente, o total de observações relativas aos anos e aos indivíduos (estados), totalizando 4.576 observações.
+
+\begin{table}[H]
+  \centering
+  \caption{Estatísticas descritivas}
+  \label{tab:descritiva}
+  \footnotesize
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    \textbf{Variável} & \textbf{Unidade} & \textbf{Média} & \textbf{Máximo} & \textbf{Mínimo} & \textbf{D.P.} & \textbf{N} \\
+    \midrule
+    DESPJUD   & R\$ mi   & 1.403,65   & 11.976,43   & 20,63   & 1.952,92  & 26 \\
+    DESPEDUC  & R\$ mi   & 4.265,73   & 46.790,23   & 381,39  & 6.966,15  & 26 \\
+    DESPLEG   & R\$ mi   & 560,01     & 2.163,01    & 0,41    & 408,67    & 26 \\
+    DESPADM   & R\$ mi   & 1.349,96   & 12.118,17   & 168,48  & 1.273,77  & 26 \\
+    DESPICS   & R\$ mi   & 173,97     & 1.974,38    & 0,55    & 273,76    & 26 \\
+    DESPTEC   & R\$ mi   & 143,82     & 1.990,18    & 0,04    & 312,18    & 26 \\
+    DESPASS   & R\$ mi   & 4.048,42   & 36.833,89   & 12,64   & 6.118,10  & 26 \\
+    DESPSAUDE & R\$ mi   & 3.290,99   & 25.775,28   & 180,60  & 4.340,82  & 26 \\
+    EDUC      & anos     & 7,07       & 11,40       & 4,10    & 1,36      & 26 \\
+    POP       & hab/km²  & 119,30     & 2.077,97    & 1,38    & 371,56    & 26 \\
+    PIB       & R\$ mi   & 219.480,36 & 2.334.547,85& 5.935,72& 390.383,82& 26 \\
+    AGUA      & \%       & 0,89       & 0,99        & 0,45    & 0,11      & 26 \\
+    VAK       & \%       & 0,23       & 0,45        & 0,07    & 0,08      & 26 \\
+    ENERG     & GWh      & 1,70       & 3,54        & 0,50    & 0,66      & 26 \\
+    TRADE     & \%       & 0,12       & 0,51        & 0,002   & 0,10      & 26 \\
+    \bottomrule
+  \end{tabular}
+  \legend{$T=16$ (2003--2018); $N=26$ estados; total = 416 obs. por variável.\\
+          Fonte: elaboração própria.}
+\end{table}
+
+Na Figura~\ref{fig:ptf_evolution} visualizam-se os gráficos com a evolução da PTF de cada estado (em preto) e a linha de tendência (em azul). Em geral, é possível destacar que as estimações estão de acordo com o que a literatura sugere, isto é, que há estagnação e posteriormente queda nos indicadores de produtividade nacionais nos últimos anos \cite{souza2021,silva2021}. Nota-se que há um padrão nos pontos de queda em todos os estados, num primeiro momento, logo no início da série, e posteriormente por volta de 2016, período da crise política nacional. Quanto à tendência, todos os estados da região sudeste apresentaram tendência de queda, ao passo que estados com maior participação da agropecuária na economia, como Mato Grosso, Piauí e Mato Grosso do Sul, apresentaram inclinações positivas.
+
+\begin{figure}[H]
+  \centering
+  % Substitua pelo caminho correto da figura gerada pelo script R
+  \includegraphics[width=\textwidth]{fig1_ptf_evolution}
+  \caption{Evolução da produtividade total dos fatores para cada estado (2003--2018)}
+  \label{fig:ptf_evolution}
+  \legend{Nota: linha preta = PTF; linha azul = tendência linear. Fonte: elaboração própria.}
+\end{figure}
+
+Evidentemente, foge ao escopo do presente trabalho detalhar o caso de cada estado, sendo suficiente apontar que os aspectos gerais das estimações estão de acordo com outros trabalhos realizados para o período \cite{silva2021,souza2021}, mesmo quando as metodologias são distintas.
+
+\section{Determinantes da Produtividade Total dos Fatores}
+
+Nesta subseção são apresentadas as estimativas econométricas. Os modelos estimados seguem o padrão definido na Equação~\eqref{eq:modelo_principal}:
+
+\begin{equation}
+  \text{ptf}_{it} = \alpha_i + \beta_1\,\text{despesa}_{it} + \beta_2\,\text{vak}_{it} + \beta_3\,\text{EDUC}_{it} + \beta_4\,\text{pop}_{it} + \beta_5\,\text{agua}_{it} + \beta_6\,\text{trade}_{it} + \beta_7\,\text{energ}_{it} + \epsilon_{it},
+  \label{eq:modelo_principal}
+\end{equation}
+
+\noindent em que as variáveis em letra minúscula denotam a forma logarítmica, $\alpha_i$ é o efeito individual constante no tempo, e $\beta_i$ representa a elasticidade da PTF em relação às variáveis selecionadas. O termo $\text{despesa}_{it}$ indica que cada função aparece unicamente como variável independente em modelos distintos.
+
+Optou-se por estimar a equação utilizando a proporção da despesa no gasto público total. As estimações foram realizadas por meio do estimador \textit{within} de efeitos fixos bidirecionais (estado + ano), com erros-padrão robustos estimados a partir de correção de White-Arellano.
+
+Os resultados estão dispostos na Tabela~\ref{tab:resultados}. Apenas as despesas com a função judiciário e a função saúde apresentaram resultados significativos, a nível de significância de 1\%. Assim, os resultados estão próximos da hipótese inicial de que nem todas as despesas apresentariam contribuições relevantes aos níveis de produtividade estadual.
+
+\begin{table}[H]
+  \centering
+  \caption{Resultados dos coeficientes estimados por efeitos fixos}
+  \label{tab:resultados}
+  \footnotesize
+  \begin{tabular}{lcccccccc}
+    \toprule
+    & \multicolumn{8}{c}{\textbf{Variável dependente: ptf}} \\
+    \cmidrule(lr){2-9}
+    \textbf{Variável} & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\
+    \midrule
+    despjud
+      & $0{,}023^{***}$ & -- & -- & -- & -- & -- & -- & -- \\
+      & $(0{,}006)$ & & & & & & & \\[3pt]
+    despeduc
+      & -- & $-0{,}022$ & -- & -- & -- & -- & -- & -- \\
+      &    & $(0{,}028)$ & & & & & & \\[3pt]
+    despleg
+      & -- & -- & $0{,}007$ & -- & -- & -- & -- & -- \\
+      &    &    & $(0{,}011)$ & & & & & \\[3pt]
+    despadm
+      & -- & -- & -- & $0{,}009$ & -- & -- & -- & -- \\
+      &    &    &    & $(0{,}016)$ & & & & \\[3pt]
+    despics
+      & -- & -- & -- & -- & $-0{,}001$ & -- & -- & -- \\
+      &    &    &    &    & $(0{,}007)$ & & & \\[3pt]
+    desptec
+      & -- & -- & -- & -- & -- & $0{,}001$ & -- & -- \\
+      &    &    &    &    &    & $(0{,}007)$ & & \\[3pt]
+    despass
+      & -- & -- & -- & -- & -- & -- & $-0{,}051$ & -- \\
+      &    &    &    &    &    &    & $(0{,}031)$ & \\[3pt]
+    despsaude
+      & -- & -- & -- & -- & -- & -- & -- & $0{,}110^{***}$ \\
+      &    &    &    &    &    &    &    & $(0{,}025)$ \\[3pt]
+    \midrule
+    EDUC
+      & $-0{,}057^{***}$ & $-0{,}059^{***}$ & $-0{,}058^{***}$ & $-0{,}059^{***}$ & $-0{,}059^{***}$ & $-0{,}060^{***}$ & $-0{,}060^{***}$ & $-0{,}060^{***}$ \\
+      & $(0{,}013)$ & $(0{,}013)$ & $(0{,}014)$ & $(0{,}014)$ & $(0{,}013)$ & $(0{,}013)$ & $(0{,}012)$ & $(0{,}013)$ \\[3pt]
+    agua
+      & $0{,}409^{***}$ & $0{,}430^{***}$ & $0{,}423^{***}$ & $0{,}426^{***}$ & $0{,}430^{***}$ & $0{,}430^{***}$ & $0{,}474^{***}$ & $0{,}415^{***}$ \\
+      & $(0{,}010)$ & $(0{,}109)$ & $(0{,}111)$ & $(0{,}110)$ & $(0{,}111)$ & $(0{,}109)$ & $(0{,}095)$ & $(0{,}106)$ \\[3pt]
+    pop
+      & $-1{,}040^{***}$ & $-1{,}014^{***}$ & $-1{,}022^{***}$ & $-1{,}030^{***}$ & $-1{,}021^{***}$ & $-1{,}023^{***}$ & $-0{,}898^{***}$ & $-1{,}020^{***}$ \\
+      & $(0{,}237)$ & $(0{,}233)$ & $(0{,}239)$ & $(0{,}231)$ & $(0{,}241)$ & $(0{,}239)$ & $(0{,}244)$ & $(0{,}218)$ \\[3pt]
+    energ
+      & $0{,}225^{*}$ & $0{,}217^{*}$ & $0{,}218^{*}$ & $0{,}217^{*}$ & $0{,}218^{*}$ & $0{,}219$ & $0{,}226^{*}$ & $0{,}220^{*}$ \\
+      & $(0{,}104)$ & $(0{,}107)$ & $(0{,}107)$ & $(0{,}107)$ & $(0{,}107)$ & $(0{,}107)$ & $(0{,}098)$ & $(0{,}102)$ \\[3pt]
+    vak
+      & $0{,}186^{**}$ & $0{,}182^{***}$ & $0{,}179^{**}$ & $0{,}179^{**}$ & $0{,}178^{*}$ & $0{,}178^{*}$ & $0{,}153^{*}$ & $0{,}175^{*}$ \\
+      & $(0{,}067)$ & $(0{,}069)$ & $(0{,}069)$ & $(0{,}068)$ & $(0{,}069)$ & $(0{,}070)$ & $(0{,}068)$ & $(0{,}070)$ \\[3pt]
+    trade
+      & $0{,}018$ & $0{,}023$ & $0{,}021$ & $0{,}024$ & $0{,}023$ & $0{,}022$ & $0{,}017$ & $0{,}021$ \\
+      & $(0{,}021)$ & $(0{,}022)$ & $(0{,}022)$ & $(0{,}021)$ & $(0{,}021)$ & $(0{,}022)$ & $(0{,}022)$ & $(0{,}021)$ \\
+    \bottomrule
+  \end{tabular}
+  \legend{$^{***}$ Significativo a 1\%; $^{**}$ significativo a 5\%; $^{*}$ significativo a 10\%.\\
+          Erros-padrão robustos (White-Arellano HC0, clusterizados por estado) entre parênteses.\\
+          Variáveis em letra minúscula denotam forma logarítmica.\\
+          Fonte: elaboração própria.}
+\end{table}
+
+A despesa com saúde é um caso particular já explorado na literatura, com resultados divergentes. Segundo \citeonline{raghupathi2020}, em trabalho sobre os Estados Unidos, o gasto público em saúde resulta, num primeiro momento, em melhorias no capital humano e na produtividade, e está positivamente correlacionada com indicadores econômicos como renda e produtividade do trabalho, porém é inconclusivo quanto aos impactos na PTF. \citeonline{bloom2004}, ao estender a função de produção dos modelos de crescimento econômico para incluir variáveis relacionadas a saúde, concluiu que indicadores de saúde apresentam impacto significativo e positivo no crescimento econômico. Yu et al. (2022) argumenta de forma semelhante ao verificar o impacto de variáveis relacionadas a saúde na PTF, constatando que o gasto ótimo por parte do governo poderia servir de controle para algumas dessas variáveis.
+
+Já o caso das despesas com judiciário é mais sutil, especialmente considerando que o efeito é pouco expressivo, mesmo que seja significativo. \citeonline{tsintzos2020} trazem evidências para o caso europeu de que o orçamento destinado ao sistema judiciário afeta a PTF marginalmente, mas positiva e significativamente. Na mesma direção, para \citeonline{pinheiro2009}, sistemas judiciais e legais competentes estimulam o crescimento e a forma como recursos são utilizados dentro de uma economia, visto que resguarda investimentos e protege direitos de propriedade. Por outro lado, como apontam \citeonline{sekunda2020}, o Brasil historicamente tem um dos piores e mais ineficientes sistemas de justiça do mundo, com ineficiências advindas principalmente de despesas com pessoal.
+
+Para o caso das despesas não significativas --- gastos com legislativo, assistência e previdência, ICS e funções administrativas --- os resultados podem estar relacionados com as ineficiências advindas da qualidade das instituições, do excesso de burocracia e distorções fiscais. Para \citeonline{neduziak2017}, talvez seja só o caso de serem despesas que nada têm a ver com produtividade.
+
+Um resultado interessante é o caso das despesas com educação. \citeonline{blankenau2007} argumentam que estudos que desconsideram a restrição orçamentária do governo subestimam os efeitos do gasto público em educação. Porém, \citeonline{neduziak2017} argumentam que além da dificuldade de estabelecer relações diretas entre educação e crescimento, há o problema adicional de entender como os recursos são alocados na área.
+
+Por fim, as variáveis de controle são tradicionais na literatura de produtividade e seguem \citeonline{yu2022}. As variáveis \texttt{agua}, \texttt{energ}, \texttt{vak} e \texttt{pop} estão com os sinais esperados e são significativas. O sinal negativo de EDUC em todas as estimações foi contrário ao esperado; alguns estudos empíricos \cite{liu2019,dahal2013} sugerem que resultados ambíguos nessa variável podem surgir a partir do nível de educação utilizado. Esperava-se também que \texttt{trade} apresentasse impacto significativo, mas muito provavelmente a segregação estadual atenuou o resultado.
+
+% -----------------------------------------------------------------------------
+\chapter{Conclusões}
+% -----------------------------------------------------------------------------
+
+Esse trabalho teve como objetivo avaliar o impacto das despesas públicas desagregadas por função na produtividade total dos fatores dos estados brasileiros, no período anual que vai de 2003 a 2018. A análise foi feita a partir da metodologia de dados em painel, utilizando as seguintes despesas como variáveis independentes em cada modelo: \textit{i)} despesa com a função judiciário; \textit{ii)} despesa com a função legislativa; \textit{iii)} despesa com a função administração/planejamento; \textit{iv)} despesa com a função educação; \textit{v)} despesa com a função indústria, comércio e serviços; \textit{vi)} despesa com a função ciência e tecnologia; \textit{vii)} despesa com a função assistência social; e \textit{viii)} despesa com a função saúde.
+
+A estimação da produtividade total dos fatores está de acordo com o que a literatura sugere, apresentando tendência de estagnação com alguns momentos de queda no período considerado. As despesas em geral se mostraram não significativas em relação à PTF, com exceção das despesas com saúde e judiciário, ambas possivelmente explicadas por fatores contextuais e que já foram, direta ou indiretamente, explorados na literatura. Destaca-se que a despesa com educação se mostrou não significativa, o que pode ser explicado pela predominância de gastos ineficientes e desvios no setor, mas sua avaliação exigiria uma análise com metodologias mais específicas. De maneira análoga, a irrelevância das despesas com Indústria, Comércio e Serviços, legislativo, assistência e previdência provavelmente está associada à natureza ineficiente desses gastos, marcados por baixa qualidade institucional, burocracia, ou o simples fato de não terem impacto algum nos indicadores de produtividade.
+
+Assim, mesmo considerando suas limitações, as estimações apresentam resultados importantes especialmente para os \textit{policymakers}, servindo de subsídio na elaboração de projetos na medida em que conferem uma perspectiva onde gastar mais, de maneira localizada, não se mostra muito aproveitável em termos de produtividade e, por extensão, de crescimento econômico.
+
+Por fim, tais resultados destacam possíveis vias de se expandir os resultados desta pesquisa: a partir da inclusão de um componente dinâmico na regressão (isto é, estimar um painel dinâmico a partir da adição da variável dependente $\text{ptf}_{it-j}$, em que $j$ é a ordem de defasagem), assim como a inclusão de outras variáveis de controle. Na medida em que os dados estaduais estão sujeitos a limitações, há de se reconhecer as imperfeições do presente estudo; portanto, estimar a PTF a partir de outros métodos e compará-los entre si poderia elucidar algumas dessas limitações.
+
+% =============================================================================
+\postextual
+% =============================================================================
+
+\bibliography{referencias}
+
+\end{document}
