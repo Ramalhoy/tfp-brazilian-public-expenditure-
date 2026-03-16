@@ -58,6 +58,10 @@ data/interim/
 *.bbl
 *.blg
 *.out
+
+
+*.tex linguist-documentation=true
+*.bib linguist-documentation=true
 *.toc
 *.lof
 *.lot
